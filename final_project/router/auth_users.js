@@ -55,8 +55,12 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     const review = req.query.review;
     const username = req.session.authorization['username'];
 
+    if (typeof review !== "string" || !review.trim()) {
+        return res.status(400).json({ message: "Review is required" });
+    }
+
     if (books[isbn]) {
-        books[isbn].reviews[username] = review;
+        books[isbn].reviews[username] = review.trim();
         return res.status(200).json({
             message: `The review for the book with ISBN ${isbn} has been added/updated.`
         });
